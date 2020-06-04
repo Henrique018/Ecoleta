@@ -1,34 +1,15 @@
 import express from "express";
+import cors from "cors";
+import path from "path";
+
+import routes from "./routes";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+app.use(routes);
 
-const users = ["Henrique", "Diego"];
-
-app.get("/users", (req, res) => {
-  const search = String(req.query.search);
-
-  const filteredUsers = users
-    ? users.filter((user) => user.includes(search))
-    : users;
-
-  return res.json(filteredUsers);
-});
-
-app.get("/users/:id", (req, res) => {
-  const id = Number(req.params.id);
-
-  return res.json(users[id]);
-});
-
-app.post("/users", (req, res) => {
-  const { name, email } = req.body;
-
-  return res.json({
-    name,
-    email,
-  });
-});
+app.use("uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 
 app.listen(3333, () => console.log(`App started on port 3333`));
